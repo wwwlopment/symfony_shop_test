@@ -22,10 +22,14 @@ services:
       dockerfile: ./_docker/app/Dockerfile
     volumes:
       - ./:/var/www
+      - ./_docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
     depends_on:
       - db
     container_name: symfony_shop_app
-
+    environment:
+      - PHP_IDE_CONFIG=serverName=shopservername
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
   db:
     image: mysql:8.0
     restart: always

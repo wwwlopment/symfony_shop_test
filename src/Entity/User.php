@@ -10,8 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
-{
+class User implements UserInterface, PasswordAuthenticatedUserInterface {
     public const ROLE_USER = 'ROLE_USER';
 
     public function __construct() {
@@ -24,6 +23,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private int $id;
 
+    #[ORM\Column(type: 'string')]
+    private string $name;
+
+    /**
+     * @return string
+     */
+    public function getName(): string {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): self {
+        $this->name = $name;
+        return $this;
+    }
+
     /**
      * @return string
      */
@@ -34,8 +51,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param string $phone
      */
-    public function setPhone(string $phone): void {
+    public function setPhone(string $phone): self {
         $this->phone = $phone;
+        return $this;
     }
 
     /**
@@ -48,8 +66,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param int $status
      */
-    public function setStatus(int $status): void {
+    public function setStatus(int $status): self {
         $this->status = $status;
+        return $this;
     }
 
     /**
@@ -62,8 +81,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param DateTimeInterface $createdAt
      */
-    public function setCreatedAt(DateTimeInterface $createdAt): void {
+    public function setCreatedAt(DateTimeInterface $createdAt): self {
         $this->createdAt = $createdAt;
+        return $this;
     }
 
     /**
@@ -76,8 +96,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param DateTimeInterface $updatedAt
      */
-    public function setUpdatedAt(DateTimeInterface $updatedAt): void {
+    public function setUpdatedAt(DateTimeInterface $updatedAt): self {
         $this->updatedAt = $updatedAt;
+        return $this;
     }
 
     #[ORM\Column(length: 180, unique: true, nullable: false)]
@@ -110,18 +131,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $updatedAt;
 
-    public function getId(): int
-    {
+    public function getId(): int {
         return $this->id;
     }
 
-    public function getEmail(): string
-    {
+    public function getEmail(): string {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
+    public function setEmail(string $email): self {
         $this->email = $email;
 
         return $this;
@@ -132,16 +150,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
+    public function getUserIdentifier(): string {
+        return (string)$this->email;
     }
 
     /**
      * @see UserInterface
      */
-    public function getRoles(): array
-    {
+    public function getRoles(): array {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -149,8 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
-    {
+    public function setRoles(array $roles): self {
         $this->roles = $roles;
 
         return $this;
@@ -159,13 +174,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
-    {
+    public function getPassword(): string {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
-    {
+    public function setPassword(string $password): self {
         $this->password = $password;
 
         return $this;
@@ -174,8 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
-    {
+    public function eraseCredentials() {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
