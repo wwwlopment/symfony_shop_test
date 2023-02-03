@@ -6,11 +6,15 @@ use App\Repository\UserRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
+
+    public const STATUS_NEW = 1;
     public const ROLE_USER = 'ROLE_USER';
 
     public function __construct() {
@@ -35,6 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * @param string $name
+     * @return $this
      */
     public function setName(string $name): self {
         $this->name = $name;
@@ -50,6 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * @param string $phone
+     * @return $this
      */
     public function setPhone(string $phone): self {
         $this->phone = $phone;
@@ -65,6 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * @param int $status
+     * @return $this
      */
     public function setStatus(int $status): self {
         $this->status = $status;
@@ -80,6 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * @param DateTimeInterface $createdAt
+     * @return $this
      */
     public function setCreatedAt(DateTimeInterface $createdAt): self {
         $this->createdAt = $createdAt;
@@ -95,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     /**
      * @param DateTimeInterface $updatedAt
+     * @return $this
      */
     public function setUpdatedAt(DateTimeInterface $updatedAt): self {
         $this->updatedAt = $updatedAt;
@@ -131,6 +140,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column(type: 'datetime')]
     private DateTimeInterface $updatedAt;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
     public function getId(): int {
         return $this->id;
     }
@@ -160,7 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     public function getRoles(): array {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = self::ROLE_USER;
 
         return array_unique($roles);
     }
@@ -190,5 +202,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     public function eraseCredentials() {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 }
