@@ -11,7 +11,14 @@
             <a href="#" class="facebook-sign-in"><i class="fa fa-facebook"></i> Sign In with Facebook</a>
             <a href="#" class="twitter-sign-in"><i class="fa fa-twitter"></i> Sign In with Twitter</a>
         </div>
-        <form class="register-form outer-top-xs" role="form">
+        {{ form_start(loginForm) }}
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+        {{ form_widget(loginForm) }}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        {{ form_end(loginForm) }}
+{#        <form class="register-form outer-top-xs" role="form">
             <div class="form-group">
                 <label class="info-title" for="exampleInputEmail1">Email Address <span>*</span></label>
                 <input type="email" class="form-control unicase-form-control text-input" id="exampleInputEmail1">
@@ -27,7 +34,7 @@
                 <a href="#" class="forgot-password pull-right">Forgot your Password?</a>
             </div>
             <button type="submit" class="btn-upper btn btn-primary checkout-page-button">Login</button>
-        </form>
+        </form>#}
     </div>
     <!-- Sign-in -->
 

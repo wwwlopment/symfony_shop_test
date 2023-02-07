@@ -15,11 +15,11 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class AppAuthentificationAuthenticator extends AbstractLoginFormAuthenticator
+class LoginAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const LOGIN_ROUTE = 'app_register';
 
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
@@ -27,13 +27,14 @@ class AppAuthentificationAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email', '');
-
+        $loginForm = $request->get('login_form');
+        $email = $loginForm['email'] ?? '';
+        $password = $loginForm['password'] ?? '';
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->request->get('password', '')),
+            new PasswordCredentials($password),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ]
@@ -47,7 +48,8 @@ class AppAuthentificationAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate('_profiler'));
+        //return new RedirectResponse($this->urlGenerator->generate('_profiler/'));
+        return new RedirectResponse($this->urlGenerator->generate('app_register'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 

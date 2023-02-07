@@ -9,6 +9,10 @@
                 <source>reg.title</source>
                 <target>Реєстрація</target>
             </trans-unit>
+            <trans-unit id="IB.qAA2" resname="login.title">
+                <source>login.title</source>
+                <target>Увійти</target>
+            </trans-unit>
             <trans-unit id="8hBqGFE" resname="Create your new account.">
                 <source>Create your new account.</source>
                 <target>Створення нового аккаунту</target>
