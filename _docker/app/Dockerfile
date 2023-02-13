@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
       zip unzip \
       curl \
       nano \
+      zlib1g-dev libxml2-dev librabbitmq-dev openssh-client \
       git && \
       docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql && \
       docker-php-ext-enable pdo_mysql && \
@@ -36,7 +37,7 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install amqp xdebug  && docker-php-ext-enable amqp xdebug
 
 #SETUP PHP-FPM CONFIG SETTINGS (max_children / max_requests)
 RUN echo 'pm.max_children = 15' >> /usr/local/etc/php-fpm.d/zz-docker.conf && \
